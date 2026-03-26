@@ -1,0 +1,29 @@
+{
+  "name": "continuacao",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/davicheron2010/continuacao#readme",
+  "bugs": {
+    "url": "https://github.com/davicheron2010/continuacao/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davicheron2010/continuacao.git"
+  },
+  "license": "ISC",
+  "author": "davi cheron da silve",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "knex": "^3.2.5",
+    "pg": "^8.20.0"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^10.4.0"
+  }
+}
