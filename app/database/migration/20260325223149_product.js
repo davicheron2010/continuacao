@@ -1,19 +1,25 @@
-exports.up = function(knex) {
+exports.up = function (knex) {
     return knex.schema.createTable('product', (table) => {
+        table.comment('Armazena os dados cadastrais dos produtos.');
         table.bigIncrements('id').primary();
         table.text('nome').notNullable();
+        table.text('codigo_barra');
+        table.text('unidade');
+        table.decimal('preco_compra', 18, 4).defaultTo(0);
+        table.decimal('margem_lucro', 8, 4).defaultTo(0);
+        table.decimal('preco_venda', 18, 4).defaultTo(0);
         table.text('descricao');
-        table.text('preco_compra').notNullable();
-        table.text('preco_venda').notNullable();
-        table.integer('estoque').defaultTo(0);
-        table.bigInteger('codigo_barra').defaultTo(0);
         table.boolean('ativo').defaultTo(true);
         table.boolean('excluido').defaultTo(false);
-        table.bigInteger('supplier_id').references('id').inTable('supplier');
-        table.timestamps(true, true);
+        table.timestamp('criado_em', { useTz: false })
+            .defaultTo(knex.fn.now())
+            .comment('Data e hora de criação do registro');
+        table.timestamp('atualizado_em', { useTz: false })
+            .defaultTo(knex.fn.now())
+            .comment('Data e hora da última atualização do registro');
     });
 };
 
-exports.down = function(knex) {
+exports.down = function (knex) {
     return knex.schema.dropTable('product');
 };
