@@ -3,7 +3,7 @@ import { app } from 'electron';
 import Template from './app/mixin/Template.js';
 
 // Carrega as rotas IPC
-import './app/routes/route.js';
+import './app/route/route.js';
 
 app.whenReady().then(() => {
     const win = Template.create('main', {

@@ -1,4 +1,4 @@
-exports.up = function(knex) {
+export function up(knex) {
     return knex.schema.createTable('company', (table) => {
         table.bigIncrements('id').primary();
         table.text('nome').notNullable();
@@ -11,6 +11,6 @@ exports.up = function(knex) {
     });
 };
 
-exports.down = function(knex) {
+export function down(knex) {
     return knex.schema.dropTable('company');
 };

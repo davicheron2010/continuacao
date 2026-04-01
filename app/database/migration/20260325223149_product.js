@@ -1,4 +1,4 @@
-exports.up = function (knex) {
+export function up(knex) {
     return knex.schema.createTable('product', (table) => {
         table.comment('Armazena os dados cadastrais dos produtos.');
         table.bigIncrements('id').primary();
@@ -20,6 +20,6 @@ exports.up = function (knex) {
     });
 };
 
-exports.down = function (knex) {
+export function down(knex) {
     return knex.schema.dropTable('product');
 };

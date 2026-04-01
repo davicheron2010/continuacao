@@ -1,4 +1,4 @@
-require('dotenv').config();
+import 'dotenv/config';
 
 const shared = {
   client: 'pg',
@@ -18,7 +18,7 @@ const shared = {
   },
 };
 
-module.exports = {
+export default {
   development: { ...shared },
   production: { ...shared, pool: { min: 2, max: 20 } },
 };

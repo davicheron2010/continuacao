@@ -1,4 +1,4 @@
-exports.up = function(knex) {
+export function up(knex) {
     return knex.schema.createTable('contact', (table) => {
         table.bigIncrements('id').primary();
         table.text('tipo').notNullable();
@@ -9,6 +9,6 @@ exports.up = function(knex) {
     });
 };
 
-exports.down = function(knex) {
+export function down(knex) {
     return knex.schema.dropTable('contact');
 };

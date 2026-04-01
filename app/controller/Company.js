@@ -1,12 +1,12 @@
 import connection from '../database/Connection.js';
 
-export default class Product {
+export default class Company {
 
-    static table = 'product';
+    static table = 'company';
 
-    static #columns = ['id', 'nome', 'codigo_barra', 'unidade', 'preco_compra', 'margem_lucro', 'preco_venda', 'descricao', 'ativo', 'criado_em', 'atualizado_em', null];
+    static #columns = ['id', 'nome', 'cnpj', 'email', 'telefone', 'ativo', null];
 
-    static #searchable = ['nome', 'codigo_barra', 'unidade', 'descricao'];
+    static #searchable = ['nome', 'cnpj', 'email', 'telefone'];
 
     static async insert(data) {
         if (!data.nome || data.nome.trim() === '') {
@@ -14,13 +14,13 @@ export default class Product {
         }
 
         try {
-            const clean = Product.#sanitize(data);
+            const clean = Company.#sanitize(data);
 
-            const [result] = await connection(Product.table)
+            const [result] = await connection(Company.table)
                 .insert(clean)
                 .returning('*');
 
-            return { status: true, msg: 'Salvo com sucesso!', id: result.id, data: [result] };
+            return { status: true, msg: 'Empresa salva com sucesso!', id: result.id, data: [result] };
 
         } catch (err) {
             return { status: false, msg: 'Erro: ' + err.message, id: null, data: [] };
@@ -30,7 +30,7 @@ export default class Product {
     static async find(data = {}) {
         const { term = '', limit = 10, offset = 0, orderType = 'asc', column = 0, draw = 1 } = data;
 
-        const [{ count: total }] = await connection(Product.table)
+        const [{ count: total }] = await connection(Company.table)
             .where({ excluido: false })
             .count('id as count');
 
@@ -40,7 +40,7 @@ export default class Product {
             query.where({ excluido: false });
             if (search) {
                 query.where(function () {
-                    for (const col of Product.#searchable) {
+                    for (const col of Company.#searchable) {
                         this.orWhereRaw(`CAST("${col}" AS TEXT) ILIKE ?`, [`%${search}%`]);
                     }
                 });
@@ -48,14 +48,14 @@ export default class Product {
             return query;
         }
 
-        const filteredQ = connection(Product.table).count('id as count');
+        const filteredQ = connection(Company.table).count('id as count');
         applySearch(filteredQ);
         const [{ count: filtered }] = await filteredQ;
 
-        const orderColumn = Product.#columns[column] || 'id';
+        const orderColumn = Company.#columns[column] || 'id';
         const orderDir = orderType === 'desc' ? 'desc' : 'asc';
 
-        const dataQ = connection(Product.table).select('*');
+        const dataQ = connection(Company.table).select('*');
         applySearch(dataQ);
         dataQ.orderBy(orderColumn, orderDir);
         dataQ.limit(parseInt(limit));
@@ -74,7 +74,7 @@ export default class Product {
     static async findById(id) {
         if (!id) return null;
 
-        const row = await connection(Product.table)
+        const row = await connection(Company.table)
             .where({ id, excluido: false })
             .first();
 
@@ -89,67 +89,56 @@ export default class Product {
         }
 
         try {
-            const clean = Product.#sanitize(data);
+            const clean = Company.#sanitize(data);
             delete clean.id;
-            clean.atualizado_em = new Date();
 
-            const [result] = await connection(Product.table)
+            const [result] = await connection(Company.table)
                 .where({ id, excluido: false })
                 .update(clean)
                 .returning('*');
 
             if (!result) {
-                return { status: false, msg: 'Produto não encontrado', data: [] };
+                return { status: false, msg: 'Empresa não encontrada', data: [] };
             }
 
-            return { status: true, msg: 'Atualizado com sucesso!', id: result.id, data: [result] };
+            return { status: true, msg: 'Empresa atualizada com sucesso!', id: result.id, data: [result] };
 
         } catch (err) {
             return { status: false, msg: 'Erro: ' + err.message, data: [] };
         }
     }
 
-    // Soft delete — marca como excluído em vez de apagar
     static async delete(id) {
         if (!id) return { status: false, msg: 'ID é obrigatório' };
 
         try {
-            const [result] = await connection(Product.table)
-                .where({ id, excluido: false })
-                .update({ excluido: true, atualizado_em: new Date() })
-                .returning('id');
-
-            if (!result) {
-                return { status: false, msg: 'Produto não encontrado' };
-            }
-
-            return { status: true, msg: 'Excluído com sucesso!' };
-
+            // Usando soft delete (excluido: true) para manter integridade
+            await connection(Company.table).where({ id }).update({ excluido: true });
+            return { status: true, msg: 'Empresa excluída com sucesso!' };
         } catch (err) {
             return { status: false, msg: 'Erro: ' + err.message };
         }
     }
 
+    static async count() {
+        const [{ count }] = await connection(Company.table)
+            .where({ excluido: false })
+            .count('id as count');
+        return parseInt(count);
+    }
+
     static #sanitize(data) {
         const ignore = ['id', 'action'];
-        const numerics = ['preco_compra', 'margem_lucro', 'preco_venda'];
         const clean = {};
 
         for (const [key, value] of Object.entries(data)) {
             if (ignore.includes(key)) continue;
             if (value === '' || value === null || value === undefined) continue;
-            if (value === 'true') { clean[key] = true; continue; }
-            if (value === 'false') { clean[key] = false; continue; }
-            if (numerics.includes(key)) { clean[key] = parseFloat(value) || 0; continue; }
+            if (value === 'true' || value === true) { clean[key] = true; continue; }
+            if (value === 'false' || value === false) { clean[key] = false; continue; }
             clean[key] = value;
         }
 
         return clean;
-    }
-    static async count() {
-        const [{ count }] = await connection(Product.table)
-            .whereNot({ excluido: true })
-            .count('id as count');
-        return parseInt(count);
     }
 }
