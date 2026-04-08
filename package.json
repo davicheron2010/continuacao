@@ -31,53 +31,53 @@
                 "portable"
             ],
             "icon": "app/view/pages/assets/img/icon.ico"
+        },
+        "nsis": {
+            "oneClick": false,
+            "allowToChangeInstallationDirectory": true,
+            "createDesktopShortcut": true,
+            "createStartMenuShortcut": true,
+            "shortcutName": "Deskivo",
+            "installerIcon": "app/view/pages/assets/img/icon.ico",
+            "uninstallerIcon": "app/view/pages/assets/img/icon.ico",
+            "installerHeaderIcon": "app/view/pages/assets/img/icon.ico"
+        },
+        "linux": {
+            "target": [
+                {
+                    "target": "AppImage",
+                    "arch": [
+                        "x64"
+                    ]
+                },
+                {
+                    "target": "deb",
+                    "arch": [
+                        "x64"
+                    ]
+                }
+            ],
+            "icon": "app/view/pages/assets/img/icon.png",
+            "category": "Office"
         }
     },
-    "nsis": {
-        "oneClick": false,
-        "allowToChangeInstallationDirectory": true,
-        "createDesktopShortcut": true,
-        "createStartMenuShortcut": true,
-        "shortcutName": "Deskivo",
-        "installerIcon": "app/view/pages/assets/img/icon.ico",
-        "uninstallerIcon": "app/view/pages/assets/img/icon.ico",
-        "installerHeaderIcon": "app/view/pages/assets/img/icon.ico"
+    "devDependencies": {
+        "electron": "^41.0.4",
+        "electron-builder": "^25.1.8",
+        "jest": "^30.3.0"
     },
-    "linux": {
-        "target": [
-            {
-                "target": "AppImage",
-                "arch": [
-                    "x64"
-                ]
-            },
-            {
-                "target": "deb",
-                "arch": [
-                    "x64"
-                ]
-            }
-        ],
-        "icon": "app/view/pages/assets/img/icon.png",
-        "category": "Office"
-    },
-"devDependencies": {
-    "electron": "^41.0.4",
-    "electron-builder": "^25.1.8",
-    "jest": "^30.3.0"
-},
-"dependencies": {
-    "@faker-js/faker": "^10.4.0",
-    "@fortawesome/fontawesome-free": "^7.2.0",
-    "bootstrap": "^5.3.8",
-    "datatables.net-bs5": "^2.3.7",
-    "datatables.net-responsive-bs5": "^3.0.8",
-    "dotenv": "^17.3.1",
-    "inputmask": "^5.0.9",
-    "jquery": "^4.0.0",
-    "knex": "^3.2.5",
-    "nunjucks": "^3.2.4",
-    "pg": "^8.20.0",
-    "sweetalert2": "^11.26.23"
-}
+    "dependencies": {
+        "@faker-js/faker": "^10.4.0",
+        "@fortawesome/fontawesome-free": "^7.2.0",
+        "bootstrap": "^5.3.8",
+        "datatables.net-bs5": "^2.3.7",
+        "datatables.net-responsive-bs5": "^3.0.8",
+        "dotenv": "^17.3.1",
+        "inputmask": "^5.0.9",
+        "jquery": "^4.0.0",
+        "knex": "^3.2.5",
+        "nunjucks": "^3.2.4",
+        "pg": "^8.20.0",
+        "sweetalert2": "^11.26.23"
+    }
 }

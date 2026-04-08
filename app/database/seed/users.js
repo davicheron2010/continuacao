@@ -1,17 +1,19 @@
-const { faker } = require("@faker-js/faker/locale/pt_BR");
+import { fakerPT_BR as faker } from '@faker-js/faker';
 
-exports.seed = async function (knex) {
+export async function seed(knex) {
   await knex('users').del();
-  const batchSize = 1000;
-  const total = 100000;
+  const total = 1000;
+  const batchSize = 100;
+
 
   for (let i = 0; i < total; i += batchSize) {
-    const batch = Array.from({ length: batchSize }, () => ({
+    const currentBatchSize = Math.min(batchSize, total - i);
+    const batch = Array.from({ length: currentBatchSize }, () => ({
       nome: faker.person.fullName(),
       cpf: faker.string.numeric(11),
-      rg: faker.string.numeric(8),
-      ativo: faker.datatype.boolean()
+      rg: faker.string.numeric(9),
+      ativo: faker.datatype.boolean({ probability: 0.9 })
     }));
     await knex('users').insert(batch);
   }
-};
+}
